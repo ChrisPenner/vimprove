@@ -1,4 +1,4 @@
-#! /bin/sh -x
+#! /bin/sh
 # Find current day as integer
 let current_day=`date +%s`/86400
 data_folder="$HOME/.vimtips" 
@@ -33,6 +33,7 @@ case "$1" in
         shift
         # Wipe everything except commas and spaces (delimiters)
         num=`sed 's/[^[:digit:][:space:],]//g' <<< "$@"`
+
         # Change commas and spaces to newlines
         num=`tr -s ' ,' '\n' <<< "$num"`
         for n in $num; do
@@ -41,6 +42,23 @@ case "$1" in
             echo "[$n] Cleared!"
         done
         exit
+        ;;
+
+    'add')
+        shift
+        # Wipe everything except commas and spaces (delimiters)
+        num=`sed 's/[^[:digit:][:space:],]//g' <<< "$@"`
+
+        # Change commas and spaces to newlines
+        num=`tr -s ' ,' '\n' <<< "$num"`
+
+        for n in $num; do
+            # Add item to active tips ONLY if it's not already there.
+            if [ ! "`grep "\[$n\]" $active_tips`" ]; then
+                sed -n "/\[$n\]/ p" $tips >> $active_tips
+                sed -n "/\[$n\]/,/\[/ {/^ /p;}" $tips >> $active_tips
+            fi
+        done
         ;;
 
     'numtips')
@@ -52,6 +70,7 @@ case "$1" in
         # Update setting
         sed -i '' "s/num_tips.*/num_tips: $numtips/" $data
         echo "Now showing max $numtips tips"
+        exit
         ;;
 
     'next')

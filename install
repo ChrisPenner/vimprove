@@ -14,7 +14,7 @@ cp ./data $data
 num_tips=`grep num_tips $data | sed 's/[^[:space:]]* //'`
 
 if [ ! -f $active_tips ]; then
-    head -n "$num_tips" ./tips > $active_tips
+    sed "/\[`expr $num_tips + 1`]/,$ d" ./tips > $active_tips
 fi
 if [ ! -f $command ]; then
     cp ./vimtips $command
