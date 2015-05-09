@@ -1,0 +1,93 @@
+#! /bin/sh
+# Find current day as integer
+let current_day=`date +%s`/86400
+data_folder="$HOME/.vimtips" 
+data="$data_folder/data" 
+temp="$data_folder/temp"
+tips="$data_folder/tips"
+active_tips="$data_folder/activetips"
+
+# Get values
+last_day=`grep last_day $data | sed 's/[^[:space:]]* //'`
+current_tip=`grep current_tip $data | sed 's/[^[:space:]]* //'`
+day_delta=`expr $current_day - $last_day`
+num_tips=`grep num_tips $data | sed 's/[^[:space:]]* //'`
+hide=`grep hide $data | sed 's/[^[:space:]]* //'`
+
+case "$1" in
+    'hide')
+
+        ;;
+
+    'clear')
+        shift
+        # Wipe everything except commas and spaces (delimiters)
+        num=`sed 's/[^[:digit:][:space:],]//g' <<< "$@"`
+        # Change commas and spaces to newlines
+        num=`tr -s ' ,' '\n' <<< "$num"`
+        for n in $num; do
+            sed -i '' "/\[$n\]/ d" $active_tips
+            echo "[$n] Cleared!"
+            echo "============"
+        done
+        ;;
+
+    'numtips')
+        shift
+        # Wipe everything except numbers and spaces
+        numtips=`tr -c -s '[0-9]' ' ' <<<"$@"`
+        # Only use first number
+        echo "$num" | read numtips rest
+        # Update setting
+        sed -i '' "s/num_tips.*/num_tips: $numtips/" $data
+        echo "Now showing max $numtips tips"
+        ;;
+
+    'next')
+        current_tip=`expr $current_tip + 1`
+
+        # Update current item.
+        sed -i '' "s/current_tip.*/current_tip: $current_tip/" $data
+
+        # Add current item to active tips ONLY if it's not already there.
+        if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
+            grep "\[$current_tip\]" $tips >> $active_tips
+        fi
+        ;;
+
+    *)
+        if [ ! $1 ]; then
+            echo "== Vimtips == ('vimtips help' for help)"
+            break
+        else
+            echo "usage:
+            'vimtips next' - adds new tip
+            'vimtips clear <x> <y> <z>...' clears tip numbers x, y, and z from list
+            'vimtips numtips <n>' shows only <n> tips from now on."
+            exit
+        fi
+        ;;
+
+    esac
+
+    if [ $day_delta -gt 0 ]; then
+        current_tip=`expr $current_tip + 1`
+
+        # Update current item.
+        sed -i '' "s/current_tip.*/current_tip: $current_tip/" $data
+
+        # Add current item to active tips ONLY if it's not already there.
+        if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
+            grep "\[$current_tip\]" $tips >> $active_tips
+        fi
+    fi
+
+    # Update last_day
+    sed -i '' "s/last_day.*/last_day: $current_day/" $data
+
+
+    # Remove down to show limit:
+    tail -n $num_tips $active_tips > $temp
+    cat $temp > $active_tips
+
+    cat $active_tips
