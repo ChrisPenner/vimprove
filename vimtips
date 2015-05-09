@@ -1,9 +1,10 @@
-#! /bin/sh
+#! /bin/sh -x
 # Find current day as integer
 let current_day=`date +%s`/86400
 data_folder="$HOME/.vimtips" 
 data="$data_folder/data" 
 temp="$data_folder/temp"
+temp2="$data_folder/temp2"
 tips="$data_folder/tips"
 active_tips="$data_folder/activetips"
 
@@ -16,7 +17,16 @@ hide=`grep hide $data | sed 's/[^[:space:]]* //'`
 
 case "$1" in
     'hide')
+        # Set 'hide' option
+        sed -i '' "s/hide.*/hide: true/" $data
+        echo "Consider it done."
+        exit
+        ;;
 
+    'show')
+        sed -i '' "s/hide.*/hide: false/" $data
+        echo "Consider it done."
+        exit
         ;;
 
     'clear')
@@ -26,10 +36,11 @@ case "$1" in
         # Change commas and spaces to newlines
         num=`tr -s ' ,' '\n' <<< "$num"`
         for n in $num; do
-            sed -i '' "/\[$n\]/ d" $active_tips
+            sed -i "/\[$n\]/,/\[/ {/^ / d;}" tips
+            sed -i "/\[$n\]/ d" tips
             echo "[$n] Cleared!"
-            echo "============"
         done
+        exit
         ;;
 
     'numtips')
@@ -51,14 +62,17 @@ case "$1" in
 
         # Add current item to active tips ONLY if it's not already there.
         if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
-            grep "\[$current_tip\]" $tips >> $active_tips
+            # grep "\[$current_tip\]" $tips >> $active_tips
+            sed -n "/\[$current_tip\]/ p" $tips >> $active_tips
+            sed -n "/\[$current_tip\]/,/\[/ {/^ /p;}" $tips >> $active_tips
         fi
         ;;
 
     *)
         if [ ! $1 ]; then
-            echo "== Vimtips == ('vimtips help' for help)"
-            break
+            if [ ! $hide = 'true' ]; then
+                echo "== Vimtips == ('vimtips help' for help)"
+            fi
         else
             echo "usage:
             'vimtips next' - adds new tip
@@ -78,16 +92,25 @@ case "$1" in
 
         # Add current item to active tips ONLY if it's not already there.
         if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
-            grep "\[$current_tip\]" $tips >> $active_tips
+            # grep "\[$current_tip\]" $tips >> $active_tips
+            sed -n "/\[$current_tip\]/ p" $tips >> $active_tips
+            sed -n "/\[$current_tip\]/,/\[/ {/^ /p;}" $tips >> $active_tips
         fi
     fi
 
     # Update last_day
     sed -i '' "s/last_day.*/last_day: $current_day/" $data
 
-
-    # Remove down to show limit:
-    tail -n $num_tips $active_tips > $temp
-    cat $temp > $active_tips
+    echo '' > $temp
+    echo '' > $temp2
+    # Remove tips until under limit
+    while [ `grep '\[.*\]' $active_tips | wc -l` -ge $num_tips ]; do
+        head -n 1 $active_tips > $temp
+        tail -n +2 $active_tips > $temp2
+        cat $temp2 > $active_tips
+    done
+    cat $active_tips >> $temp
+    cat $temp | sed '/^$/d' > $active_tips
+    rm -f "$data_folder/temp*"
 
     cat $active_tips

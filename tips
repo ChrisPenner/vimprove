@@ -1,8 +1,14 @@
 [1] HJKL
+    lines
 [2] :help
 [3] i
+    multi line
+    tip 
+    goes here
 [4] <esc>
 [5] u
+    more
+    multi
 [6] <c-o>
 [7] :wq
 [8] nnoremap
