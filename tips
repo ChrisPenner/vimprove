@@ -1,0 +1,11 @@
+You've set up vimpressions!  Each day it'll show you new vim tips, By default configured to show the most recent 4 tips, change this with $$
+[1] HJKL
+[2] :help
+[3] i
+[4] <esc>
+[5] u
+[6] <c-o>
+[7] :wq
+[8] nnoremap
+[9] qq
+[10] $, ^
