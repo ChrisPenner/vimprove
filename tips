@@ -1,16 +1,34 @@
-[1] HJKL
-    lines
-[2] :help
-[3] i
-    multi line
-    tip 
-    goes here
-[4] <esc>
-[5] u
-    more
-    multi
-[6] <c-o>
-[7] :wq
-[8] nnoremap
-[9] qq
-[10] $, ^
+[1] Run the `vimtutor` command (on the terminal) and complete Section 1
+[2] Remember, use `hjkl` to move around.
+[3] `i` enters insert mode, where vim works like most editors.
+[4] In `normal` mode every key is its own command.
+    Press `<escape>` to return to normal mode.
+[5] {N} In normal mode `:` enters command mode.
+    From now on, {N} denotes a normal-mode command.
+[6] {N} `:w` saves the file. `:q` quits, `:wq` saves and quits! (Who'd have guessed??)
+[7] Do Section 2 of `vimtutor`. Going through vimtutor often helps you to remember commands you've forgotten.
+[8] If you want to show more tips at a time, run `vimtips numtips 'n'`, where 'n' is the max number of tips to show at a time.
+[9] {C} Curious what a key[combination] does? run `:help <keysequence>` to learn!
+    We'll refer to command mode commands with the {C} label.
+[10] Hitting escape is annoying. It's far away. Try rebinding your keyboard's caps-lock key to escape instead! (try 'Seil'!)
+[11] If you've got a tip mastered, run `vimtips clear 'n'` to clear tip 'n'.
+[12] {N} `w` moves the cursor forward by one 'word'
+    Try `:help iskeyword` to learn about what makes a 'word'.
+[13] {N} `b` moves the cursor backward by one 'word'
+[14] {N} `W` moves the cursor forward by one 'WORD'
+    A 'WORD' is a contiguous group of non-whitespace characters, basically this jumps to past the next space.
+    `B` goes back one 'WORD' as the clever among you may have suspected.
+[15] To move to the next tip, run `vimtips next`. (Use restraint, you'll learn better doing just few at a time)
+     Make sure you're trying out each tip as you read it!
+[16] {N} `0` jumps to the beginning of the current line.
+     {N} `$` jumps to the end of the line.
+[17] {N} Use `I` to start inserting text at the beginning of the current line.
+     {N} Use `A` to insert text at the end of the current line.
+[18] {N} Try `u` to undo your mistakes! Hit it multiple times to undo more.
+    {N} <C-r> to redo changes, (<C-r> means hold 'control' key and press 'r')
+
+
+
+ <c-o>
+ nnoremap
+ qq

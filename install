@@ -6,15 +6,19 @@ tips="$data_folder/tips"
 active_tips="$data_folder/activetips"
 command="$data_folder/vimtips"
 
+
 rm -r $HOME/.vimtips
 mkdir $data_folder
 cp ./tips $tips
 cp ./data $data
 
+let current_day=`date +%s`/86400
+echo "last_day: $current_day" >> $data
+
 num_tips=`grep num_tips $data | sed 's/[^[:space:]]* //'`
 
 if [ ! -f $active_tips ]; then
-    sed "/\[`expr $num_tips + 1`]/,$ d" ./tips > $active_tips
+    sed "/\[`expr $num_tips + 1`\]/,$ d" ./tips > $active_tips
 fi
 if [ ! -f $command ]; then
     cp ./vimtips $command
@@ -24,7 +28,7 @@ fi
 echo ">>> * One more step to do! *
 Add these lines to your .bashrc or .bash_profile:
     \$HOME/.vimtips/vimtips
-    alias vimtips="$HOME/.vimtips/vimtips"
+    alias vimtips=\$HOME/.vimtips/vimtips
 
 >>> Great!
 >>> Each day it'll show you new vim tips!

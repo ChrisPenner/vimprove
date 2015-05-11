@@ -1,6 +1,4 @@
 #! /bin/sh
-# Find current day as integer
-let current_day=`date +%s`/86400
 data_folder="$HOME/.vimtips" 
 data="$data_folder/data" 
 temp="$data_folder/temp"
@@ -9,36 +7,64 @@ tips="$data_folder/tips"
 active_tips="$data_folder/activetips"
 
 # Get values
+# Find current day as integer
+let current_day=`date +%s`/86400
 last_day=`grep last_day $data | sed 's/[^[:space:]]* //'`
 current_tip=`grep current_tip $data | sed 's/[^[:space:]]* //'`
 day_delta=`expr $current_day - $last_day`
 num_tips=`grep num_tips $data | sed 's/[^[:space:]]* //'`
 hide=`grep hide $data | sed 's/[^[:space:]]* //'`
 
+set_value()
+{
+    sed -i '' "s/$1.*/$1: $2/" $data
+}
+
+clean_numbers()
+{
+    # Wipe everything except commas and spaces (delimiters)
+    num=`tr -c -s '[0-9]' ' ' <<<"$@"`
+
+    # Change commas and spaces to newlines
+    num=`tr -s ' ,' '\n' <<< "$@"`
+    echo $num
+}
+
+add_number()
+{
+    n="$1"
+    # Add item to active tips ONLY if it's not already there.
+    if ! grep -q "\[$n\]" $active_tips; then
+        sed -n "/\[$n\]/ p" $tips >> $active_tips
+        sed -n "/\[$n\]/,/\[/ {/^ /p;}" $tips >> $active_tips
+        return 0
+    else
+        return 1
+    fi
+}
+
 case "$1" in
     'hide')
         # Set 'hide' option
-        sed -i '' "s/hide.*/hide: true/" $data
+        set_value "hide" "true"
         echo "Consider it done."
         exit
         ;;
 
     'show')
-        sed -i '' "s/hide.*/hide: false/" $data
+        set_value "hide" "false"
         echo "Consider it done."
         exit
         ;;
 
     'clear')
         shift
-        # Wipe everything except commas and spaces (delimiters)
-        num=`sed 's/[^[:digit:][:space:],]//g' <<< "$@"`
-
-        # Change commas and spaces to newlines
-        num=`tr -s ' ,' '\n' <<< "$num"`
+        num=`clean_numbers $@`
         for n in $num; do
-            sed -i "/\[$n\]/,/\[/ {/^ / d;}" tips
-            sed -i "/\[$n\]/ d" tips
+            # Sed magic: clear line continuations following [n],
+            sed -i '' "/\[$n\]/,/\[/ {/^\[/ !d;}" "$active_tips"
+            # Then clear [n] line itself.
+            sed -i '' "/\[$n\]/ d" "$active_tips"
             echo "[$n] Cleared!"
         done
         exit
@@ -46,30 +72,29 @@ case "$1" in
 
     'add')
         shift
-        # Wipe everything except commas and spaces (delimiters)
-        num=`sed 's/[^[:digit:][:space:],]//g' <<< "$@"`
-
-        # Change commas and spaces to newlines
-        num=`tr -s ' ,' '\n' <<< "$num"`
-
+        num=`clean_numbers $@`
         for n in $num; do
-            # Add item to active tips ONLY if it's not already there.
-            if [ ! "`grep "\[$n\]" $active_tips`" ]; then
-                sed -n "/\[$n\]/ p" $tips >> $active_tips
-                sed -n "/\[$n\]/,/\[/ {/^ /p;}" $tips >> $active_tips
+            if ! grep -q "\[$n\]" $tips; then
+                echo "Can't find any tip [$n]!"
+            else
+                if add_number $n; then
+                    echo "Added [$n]."
+                else
+                    echo "[$n] Already exists"
+                fi
             fi
         done
+        exit
         ;;
 
     'numtips')
         shift
-        # Wipe everything except numbers and spaces
-        numtips=`tr -c -s '[0-9]' ' ' <<<"$@"`
-        # Only use first number
-        echo "$num" | read numtips rest
+        # clean, then only take first value.
+        num=`clean_numbers $@ | sed 's/\([[:digit:]]\+\).*/\1/'`
+
         # Update setting
-        sed -i '' "s/num_tips.*/num_tips: $numtips/" $data
-        echo "Now showing max $numtips tips"
+        set_value "num_tips" $num
+        echo "Now showing max $num tips"
         exit
         ;;
 
@@ -77,21 +102,17 @@ case "$1" in
         current_tip=`expr $current_tip + 1`
 
         # Update current item.
-        sed -i '' "s/current_tip.*/current_tip: $current_tip/" $data
-
-        # Add current item to active tips ONLY if it's not already there.
-        if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
-            # grep "\[$current_tip\]" $tips >> $active_tips
-            sed -n "/\[$current_tip\]/ p" $tips >> $active_tips
-            sed -n "/\[$current_tip\]/,/\[/ {/^ /p;}" $tips >> $active_tips
-        fi
+        set_value 'current_tip' $current_tip
+        add_number "$current_tip"
         ;;
 
     *)
+        # Print header?
         if [ ! $1 ]; then
             if [ ! $hide = 'true' ]; then
                 echo "== Vimtips == ('vimtips help' for help)"
             fi
+        # If unrecognized args, print usage.
         else
             echo "usage:
             'vimtips next' - adds new tip
@@ -107,18 +128,14 @@ case "$1" in
         current_tip=`expr $current_tip + 1`
 
         # Update current item.
-        sed -i '' "s/current_tip.*/current_tip: $current_tip/" $data
+        set_value 'current_tip' $current_tip
 
-        # Add current item to active tips ONLY if it's not already there.
-        if [ ! "`grep "\[$current_tip\]" $active_tips`" ]; then
-            # grep "\[$current_tip\]" $tips >> $active_tips
-            sed -n "/\[$current_tip\]/ p" $tips >> $active_tips
-            sed -n "/\[$current_tip\]/,/\[/ {/^ /p;}" $tips >> $active_tips
-        fi
+        add_number $current_tip
     fi
 
     # Update last_day
     sed -i '' "s/last_day.*/last_day: $current_day/" $data
+    set_value 'last_day' $current_day
 
     echo '' > $temp
     echo '' > $temp2
@@ -132,4 +149,5 @@ case "$1" in
     cat $temp | sed '/^$/d' > $active_tips
     rm -f "$data_folder/temp*"
 
+    # Finally, print out active tips.
     cat $active_tips
