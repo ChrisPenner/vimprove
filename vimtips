@@ -30,6 +30,15 @@ clean_numbers()
     echo $num
 }
 
+clear_tip()
+{
+    # Sed magic: clear line continuations following [n],
+    sed -i '' "/\[$1\]/,/\[/ {/^\[/ !d;}" "$active_tips"
+    # Then clear [n] line itself.
+    sed -i '' "/\[$1\]/ d" "$active_tips"
+    echo "[$1] Cleared!"
+}
+
 add_number()
 {
     n="$1"
@@ -61,11 +70,7 @@ case "$1" in
         shift
         num=`clean_numbers $@`
         for n in $num; do
-            # Sed magic: clear line continuations following [n],
-            sed -i '' "/\[$n\]/,/\[/ {/^\[/ !d;}" "$active_tips"
-            # Then clear [n] line itself.
-            sed -i '' "/\[$n\]/ d" "$active_tips"
-            echo "[$n] Cleared!"
+            clear_tip $n
         done
         exit
         ;;
@@ -121,33 +126,29 @@ case "$1" in
             exit
         fi
         ;;
+esac
 
-    esac
+# If it's been at least one day, increment current_tip
+if [ $day_delta -gt 0 ]; then
+    current_tip=`expr $current_tip + 1`
 
-    if [ $day_delta -gt 0 ]; then
-        current_tip=`expr $current_tip + 1`
+    # Update current item.
+    set_value 'current_tip' $current_tip
 
-        # Update current item.
-        set_value 'current_tip' $current_tip
+    add_number $current_tip
+fi
 
-        add_number $current_tip
-    fi
+# Update last_day
+sed -i '' "s/last_day.*/last_day: $current_day/" $data
+set_value 'last_day' $current_day
 
-    # Update last_day
-    sed -i '' "s/last_day.*/last_day: $current_day/" $data
-    set_value 'last_day' $current_day
+while [ `grep '\[.*\]' $active_tips | wc -l` -gt $num_tips ]; do
+    num=`head -n 1 $active_tips | sed 's/\[\([[:digit:]]\{1,\}\)\].*/\1/'`
+    clear_tip $num
+done
 
-    echo '' > $temp
-    echo '' > $temp2
-    # Remove tips until under limit
-    while [ `grep '\[.*\]' $active_tips | wc -l` -ge $num_tips ]; do
-        head -n 1 $active_tips > $temp
-        tail -n +2 $active_tips > $temp2
-        cat $temp2 > $active_tips
-    done
-    cat $active_tips >> $temp
-    cat $temp | sed '/^$/d' > $active_tips
-    rm -f "$data_folder/temp*"
+# Remove empty lines
+sed -i '' '/^$/d' $active_tips
 
-    # Finally, print out active tips.
-    cat $active_tips
+# Finally, print out active tips.
+cat $active_tips
