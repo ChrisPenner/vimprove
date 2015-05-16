@@ -1,13 +1,24 @@
 #! /bin/sh
 
-data_folder="$HOME/.vimtips" 
+data_folder="$HOME/.vimprove" 
 data="$data_folder/data" 
 tips="$data_folder/tips"
 active_tips="$data_folder/activetips"
-command="$data_folder/vimtips"
+command="$data_folder/vimprove"
 
 
-rm -r $HOME/.vimtips
+if [ -d $data_folder -o -f $data_folder ]; then
+    echo "The file or folder $data_folder already exists. Overwrite it? (y/n)"
+    read response
+    if [ $response != 'y' -a $response != 'Y' ]; then
+        echo "Okay, shutting down."
+        exit
+    fi
+fi
+
+echo "Installing stuff..."
+
+rm -rf $HOME/.vimprove
 mkdir $data_folder
 cp ./tips $tips
 cp ./data $data
@@ -21,17 +32,16 @@ if [ ! -f $active_tips ]; then
     sed "/\[`expr $num_tips + 1`\]/,$ d" ./tips > $active_tips
 fi
 if [ ! -f $command ]; then
-    cp ./vimtips $command
+    cp ./vimprove $command
 fi
 
 
-echo ">>> * One more step to do! *
+echo "\n**** One more step to do! ****
 Add these lines to your .bashrc or .bash_profile:
-    \$HOME/.vimtips/vimtips
-    alias vimtips=\$HOME/.vimtips/vimtips
+     alias vimprove=\"~/.vimprove/vimprove\"
+     vimprove
 
->>> Great!
->>> Each day it'll show you new vim tips!
->>> As tips get older (and you master them) they disappear.
->>> Right now it's configured to show the most recent $num_tips tips,
->>> change this with 'vimtips numtips <num>'"
+Great!
+Each day it'll show you new vim tips!
+As tips get older (and you master them) they disappear.
+Run 'vimprove help' to learn more!"

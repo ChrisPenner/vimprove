@@ -1,5 +1,5 @@
 #! /bin/sh
-data_folder="$HOME/.vimtips" 
+data_folder="$HOME/.vimprove" 
 data="$data_folder/data" 
 temp="$data_folder/temp"
 temp2="$data_folder/temp2"
@@ -115,14 +115,14 @@ case "$1" in
         # Print header?
         if [ ! $1 ]; then
             if [ ! $hide = 'true' ]; then
-                echo "== Vimtips == ('vimtips help' for help)"
+                echo "== Vimprove == ('vimprove help' for help)"
             fi
         # If unrecognized args, print usage.
         else
             echo "usage:
-            'vimtips next' - adds new tip
-            'vimtips clear <x> <y> <z>...' clears tip numbers x, y, and z from list
-            'vimtips numtips <n>' shows only <n> tips from now on."
+            'vimprove next' - adds new tip
+            'vimprove clear <x> <y> <z>...' clears tip numbers x, y, and z from list
+            'vimprove numtips <n>' shows only <n> tips from now on."
             exit
         fi
         ;;

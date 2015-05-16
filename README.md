@@ -1,27 +1,31 @@
-# Vimtips
+# Vimprove
 A series of daily tasks/info to learn vim from beginner to expert one day at a time.
 Once installed it gives you new tips in your console every day.
+It aims to walk users through new features over time, giving the user time to
+learn concepts as they slowly expand their understanding of vim. For this
+reason some concepts are explained using different terminology (files instead
+of buffers) to aid understanding.
 
 ## Installation
 - Clone the repo:
 ```bash
-    git clone https://www.github.com/ChrisPenner/vimtips
+    git clone https://www.github.com/ChrisPenner/vimprove
 ```
 
 - Run the installation script, then delete the folder.
-(The program and tips will be stored in your `~/.vimtips` folder)
+(The program and tips will be stored in your `~/.vimprove` folder)
 
 ```bash
-    ./vimtips/install
+    ./vimprove/install
 ```
 
 - Lastly add this call to your .bashrc (or your profile file).
-    This will cause vimtips to print out your tips every time you open a new
+    This will cause vimprove to print out your tips every time you open a new
     console.
 
 ```bash
-    alias vimtips="~/.vimtips/vimtips"
-    vimtips
+    alias vimprove="~/.vimprove/vimprove"
+    vimprove
 ```
 
 - You can now safely delete the github repo you cloned.
@@ -30,43 +34,43 @@ Once installed it gives you new tips in your console every day.
 - Get help:
 
 ```bash
-    vimtips help
+    vimprove help
 ```
 
 - Change the number of tips shown at a time:
 
 ```bash
-    vimtips numtips <number>
+    vimprove numtips <number>
 ```
 
 - Cycle to the next tip
 
 ```bash
-    vimtips next
+    vimprove next
 ```
 
 - Remove a tip from your displayed tips:
 
 ```bash
-    vimtips clear <number>
+    vimprove clear <number>
 ```
 
 - Add a tip to your displayed tips:
 
 ```bash
-    vimtips add <number>
+    vimprove add <number>
 ```
 
 - Hide the header message
 
 ```bash
-    vimtips hide
+    vimprove hide
 ```
 
 - Show the header message
 
 ```bash
-    vimtips show
+    vimprove show
 ```
 
 ## The Tips
@@ -88,11 +92,11 @@ them a few at a time!
 7. Work through Section 2 of `vimtutor`.
     Going through vimtutor helps you to remember commands you've forgotten.
 8. {C} :e <file>` opens a file for editing.
-9. If you want to show more tips at a time, run `vimtips numtips 'n'`,
+9. If you want to show more tips at a time, run `vimprove numtips 'n'`,
     Where 'n' is the max number of tips to show at a time.
 10. Hitting escape is annoying. It's far away.
      Try rebinding your caps-lock key to escape instead! (try 'Seil'!)
-11. If you've got a tip mastered, run `vimtips clear 'n'` to clear tip 'n'.
+11. If you've got a tip mastered, run `vimprove clear 'n'` to clear tip 'n'.
 12. `w` moves the cursor forward by one 'word'
      Try `:help iskeyword` to learn about what makes a 'word'.
 13. `b` moves the cursor backward by one 'word'
@@ -110,7 +114,7 @@ them a few at a time!
 17. Now you've got a .vimrc! You can store mappings, settings, functions and
      all sorts of cool things in there. Try to keep it organized, we'll learn
      about mappings in a bit!
-18. To move to the next tip, run `vimtips next`.
+18. To move to the next tip, run `vimprove next`.
      Make sure you're trying out each tip as you read it!
 19. Try finishing off vimtutor today!
 20. Use `I` to start inserting text at the beginning of the current line.

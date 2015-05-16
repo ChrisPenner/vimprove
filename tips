@@ -13,11 +13,11 @@
 [7] Work through Section 2 of `vimtutor`.
     Going through vimtutor helps you to remember commands you've forgotten.
 [8] {C} :e <file>` opens a file for editing.
-[9] If you want to show more tips at a time, run `vimtips numtips 'n'`,
+[9] If you want to show more tips at a time, run `vimprove numtips 'n'`,
     Where 'n' is the max number of tips to show at a time.
 [10] Hitting escape is annoying. It's far away.
      Try rebinding your caps-lock key to escape instead! (try 'Seil'!)
-[11] If you've got a tip mastered, run `vimtips clear 'n'` to clear tip 'n'.
+[11] If you've got a tip mastered, run `vimprove clear 'n'` to clear tip 'n'.
 [12] `w` moves the cursor forward by one 'word'
      Try `:help iskeyword` to learn about what makes a 'word'.
 [13] `b` moves the cursor backward by one 'word'
@@ -35,7 +35,7 @@
 [17] Now you've got a .vimrc! You can store mappings, settings, functions and 
      all sorts of cool things in there. Try to keep it organized, we'll learn 
      about mappings in a bit!
-[18] To move to the next tip, run `vimtips next`.
+[18] To move to the next tip, run `vimprove next`.
      Make sure you're trying out each tip as you read it!
 [19] Try finishing off vimtutor today!
 [20] Use `I` to start inserting text at the beginning of the current line.
@@ -86,7 +86,7 @@
      Even `i` can take a count. Try `10i`, type something, then <esc>.
 [42] `o` starts insert on a new line BELOW the current one.
      `O` starts insert on a new line ABOVE the current one.
-[43] `ZZ` is a quick way to save and quit all files.
+[43] `ZZ` is a quick way a file.
 [44] Time for something new, Mappings. Every key you press is mapped to 
      something, right now the keys are mapped to their literal value, but we can 
      change that. Any key-sequence can be 'mapped' any other key sequence. 
