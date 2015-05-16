@@ -36,7 +36,6 @@ clear_tip()
     sed -i '' "/\[$1\]/,/\[/ {/^\[/ !d;}" "$active_tips"
     # Then clear [n] line itself.
     sed -i '' "/\[$1\]/ d" "$active_tips"
-    echo "[$1] Cleared!"
 }
 
 add_number()
@@ -71,6 +70,7 @@ case "$1" in
         num=`clean_numbers $@`
         for n in $num; do
             clear_tip $n
+            echo "[$1] Cleared!"
         done
         exit
         ;;

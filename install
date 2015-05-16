@@ -42,6 +42,7 @@ Add these lines to your .bashrc or .bash_profile:
      vimprove
 
 Great!
+Check out usage info at https://www.github.com/ChrisPenner/vimprove
 Each day it'll show you new vim tips!
 As tips get older (and you master them) they disappear.
 Run 'vimprove help' to learn more!"

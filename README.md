@@ -31,6 +31,14 @@ of buffers) to aid understanding.
 - You can now safely delete the github repo you cloned.
 
 ## Usage
+Vimprove will do its very best to be self-sufficient. Each day that it's run it
+will update the vim tips shown by adding a new one and deleting the oldest (if
+you've hit the max number of tips, see below to change this). That being said,
+if you want to manage it manually there's some commands built in.
+
+The whole thing is built in bash and plain-text, so if you want to add your own
+tips, just follow the same format and it'll probably just work.
+
 - Get help:
 
 ```bash
