@@ -91,7 +91,7 @@ change the value of `current_tip`.
 Feel free to read through them now, but you'll learn them much better if you learn
 them a few at a time!
 
-1. Run the `vimtutor` comman. .on the terminal. an. complete Section 1
+1. Run the `vimtutor` command on the terminal and complete Section 1
 2. Remember, use `hjkl` to move around.
 3. `i` enters insert mode, where vim works like most editors.
 4. In `normal` mode every key is its own command.
