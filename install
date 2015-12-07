@@ -47,4 +47,4 @@ Each day it'll show you new vim tips!
 As tips get older (and you master them) they disappear.
 Run 'vimprove help' to learn more!
 New tips will (hopefully) be added to the project all the time, so from time to
-time just reclone and replace `~/.vimprove/tips` with the new `tips` file."
+time just reclone and replace '~/.vimprove/tips' with the new 'tips' file."
